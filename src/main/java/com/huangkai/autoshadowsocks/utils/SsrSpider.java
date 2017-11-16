@@ -19,7 +19,7 @@ public class SsrSpider {
     private static final Logger log = LoggerFactory.getLogger(SsrSpider.class);
 
     public static <T> List<T> forEntityList(String url, int top, DocumentAnalyzer docAnalyzer, Class<T> type) throws Exception {
-        log.info("开始抓取SSR账号：" + url);
+        log.info("Spider SSR:" + url);
         List<T> results = new ArrayList<>();
         //构造一个webClient 模拟Chrome 浏览器
         WebClient webClient = new WebClient(BrowserVersion.CHROME);
@@ -41,7 +41,7 @@ public class SsrSpider {
         Document document = Jsoup.parse(html);
         docAnalyzer.forListMap(document, top).forEach(map -> {
             try {
-                results.add(TinyUtil.mapToBean(map, type));
+                results.add(TinyUtils.mapToBean(map, type));
             } catch (Exception ignored) {
                 System.out.println(ignored);
             }

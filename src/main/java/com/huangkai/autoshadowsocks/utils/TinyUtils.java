@@ -2,20 +2,24 @@ package com.huangkai.autoshadowsocks.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.huangkai.autoshadowsocks.controller.SsrController;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import java.awt.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TinyUtil {
+public class TinyUtils {
+
     /**
      * map转对象
      *
@@ -46,35 +50,11 @@ public class TinyUtil {
 
     public static JSONObject jsonData(File file) {
         JSONObject jsonDate = null;
-        String json = new String();
-        FileInputStream fin = null;
+        String json = null;
         try {
-            fin = new FileInputStream(file);
-            FileChannel channel = fin.getChannel();
-
-            int capacity = 932;// 字节
-            ByteBuffer bf = ByteBuffer.allocate(capacity);
-            while (channel.read(bf) != -1) {
-                /*
-                 * 注意，读取后，将位置置为0，将limit置为容量, 以备下次读入到字节缓冲中，从0开始存储
-                 */
-                bf.clear();
-                byte[] bytes = bf.array();
-                json += new String(bytes, 0, capacity);
-            }
-            channel.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            json = FileUtils.readFileToString(file, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (fin != null) {
-                try {
-                    fin.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
         if (json != null) {
             Pattern p = Pattern.compile("\\s*|\t|\r|\n");
@@ -83,6 +63,30 @@ public class TinyUtil {
         }
         jsonDate = JSON.parseObject(json);//得到JSONobject对象
         return jsonDate;
+    }
+
+    public static boolean backupFile(File srcFile) {
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");//设置日期格式
+            String currentDate = df.format(new Date());// new Date()为获取当前系统时间
+            File destFile = new File(srcFile.getAbsoluteFile() + "." + currentDate);
+            FileUtils.copyFile(srcFile, destFile);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void startProgram(String programPath) throws IOException {
+        if (StringUtils.isNotBlank(programPath)) {
+            try {
+                Desktop.getDesktop().open(new File(programPath));
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Exe：" + programPath + " No Existing!");
+            }
+        }
     }
 
 }

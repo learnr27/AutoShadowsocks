@@ -1,8 +1,9 @@
 package com.huangkai.autoshadowsocks.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.huangkai.autoshadowsocks.entity.Ssr;
 import com.huangkai.autoshadowsocks.service.SsrService;
+import com.huangkai.autoshadowsocks.utils.TinyUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +18,11 @@ import java.util.List;
 @Component
 public class SsrController {
 
-    private static String URL = "https://ss.weirch.com/";
-    private static String filepath = "D:\\ShadowsocksR\\gui-config.json";
+    @Value("${ShadowsocksR.Website}")
+    private String URL;
+
+    @Value("${ShadowsocksR.RootPath}")
+    private String ROOT_PATH;
 
     @Resource
     private SsrService ssrService;
@@ -30,11 +34,15 @@ public class SsrController {
      */
     @Scheduled(initialDelay = 3000, fixedDelay = 1800000)
     public void timerInit() throws Exception {
-        System.out.println("当前执行时间 : " + dateFormat.format(new Date()));
+        System.out.println("Start Time:" + dateFormat.format(new Date()));
+        System.out.println(ROOT_PATH);
         //从网站获取配置信息，前5条
         List<Ssr> ssrList = ssrService.getSsrFromUrl(URL, 5);
-        JSONObject jsonObject = ssrService.getGuiConfig(filepath);
-
+        //把ssrList保存至配置文件中
+        boolean isSuccess = ssrService.saveGuiConfig(URL, ssrList, ROOT_PATH + "\\gui-config.json");
+        //启动ShadowsocksR-dotnet4.0.exe
+        TinyUtils.startProgram(ROOT_PATH + "\\ShadowsocksR-dotnet4.0.exe");
+        System.out.println("End Time:" + dateFormat.format(new Date()));
     }
 
 }

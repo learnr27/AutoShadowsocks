@@ -11,7 +11,8 @@
     <name>autoshadowsocks</name>
     <description>
         自动获取shadowsocks配置信息。
-        配置文件存储于D:\ShadowsocksR\gui-config.json
+        把autoshadowsocks-0.0.1-SNAPSHOT.jar放入SSR目录中。
+        启动命令：java -jar autoshadowsocks-0.0.1-SNAPSHOT.jar
     </description>
 
     <!-- 阿里云Maven仓库 -->
@@ -68,7 +69,7 @@
             <artifactId>jsoup</artifactId>
             <version>1.11.1</version>
         </dependency>
-        
+
         <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
