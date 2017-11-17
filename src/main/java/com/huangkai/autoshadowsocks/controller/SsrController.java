@@ -21,6 +21,9 @@ public class SsrController {
     @Value("${ShadowsocksR.Website}")
     private String URL;
 
+    @Value("${ShadowsocksR.Top}")
+    private int TOP;
+
     @Value("${ShadowsocksR.RootPath}")
     private String ROOT_PATH;
 
@@ -35,13 +38,12 @@ public class SsrController {
     @Scheduled(initialDelay = 3000, fixedDelay = 1800000)
     public void timerInit() throws Exception {
         System.out.println("Start Time:" + dateFormat.format(new Date()));
-        System.out.println(ROOT_PATH);
-        //从网站获取配置信息，前5条
-        List<Ssr> ssrList = ssrService.getSsrFromUrl(URL, 5);
+        //从网站获取配置信息，前10条
+        List<Ssr> ssrList = ssrService.getSsrFromUrl(URL, TOP);
         //把ssrList保存至配置文件中
         boolean isSuccess = ssrService.saveGuiConfig(URL, ssrList, ROOT_PATH + "\\gui-config.json");
         //启动ShadowsocksR-dotnet4.0.exe
-        TinyUtils.startProgram(ROOT_PATH + "\\ShadowsocksR-dotnet4.0.exe");
+        TinyUtils.startProgram(ROOT_PATH, "ShadowsocksR-dotnet4.0.exe");
         System.out.println("End Time:" + dateFormat.format(new Date()));
     }
 

@@ -71,18 +71,19 @@ public class TinyUtils {
             FileUtils.copyFile(srcFile, destFile);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return false;
         }
     }
 
-    public static void startProgram(String programPath) throws IOException {
+    public static void startProgram(String programPath, String programName) throws IOException {
         if (StringUtils.isNotBlank(programPath)) {
             try {
-                Desktop.getDesktop().open(new File(programPath));
+                Runtime.getRuntime().exec("taskkill /f /im " + programName);
+                Thread.currentThread().sleep(2000);
+                Runtime.getRuntime().exec(programPath + "\\" + programName);
             } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Exe：" + programPath + " No Existing!");
+                System.out.println("Error exec!" + e);
             }
         }
     }
