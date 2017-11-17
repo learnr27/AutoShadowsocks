@@ -33,7 +33,10 @@ public class SsrServiceImpl implements SsrService {
     @Override
     public GuiConfig getGuiConfig(String filepath) throws Exception {
         JSONObject jsonObject = TinyUtils.jsonData(new File(filepath));
-        GuiConfig guiConfig = JSON.parseObject(jsonObject.toJSONString(), GuiConfig.class);
+        GuiConfig guiConfig = new GuiConfig();
+        if (jsonObject != null) {
+            guiConfig = JSON.parseObject(jsonObject.toJSONString(), GuiConfig.class);
+        }
         return guiConfig;
     }
 
@@ -47,7 +50,7 @@ public class SsrServiceImpl implements SsrService {
         for (int i = 0; i < webSsrList.size(); i++) {
             Ssr ssr = webSsrList.get(i);
             ssr.setId(UUID.randomUUID().toString().replaceAll("-", "").toUpperCase());
-            ssr.setRemarks_base64(new String(Base64.encodeBase64(ssr.getRemarks().getBytes(UTF_8)), UTF_8));
+            ssr.setRemarks_base64(Base64.encodeBase64URLSafeString(ssr.getRemarks().getBytes()));
             ssr.setGroup(url);
             webSsrList.set(i, ssr);
         }
