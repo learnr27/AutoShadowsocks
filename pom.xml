@@ -11,8 +11,9 @@
     <name>autoshadowsocks</name>
     <description>
         自动获取shadowsocks配置信息。
-        把autoshadowsocks-0.0.1-SNAPSHOT.jar放入SSR目录中。
-        启动命令：java -jar autoshadowsocks-0.0.1-SNAPSHOT.jar
+        1、配置src/main/resources/application.properties中的ShadowsocksR.RootPath，此路径为SSR工具路径。
+        2、命令行mvn clean package打包。
+        3、启动命令：java -jar target/autoshadowsocks-0.0.1-SNAPSHOT.jar
     </description>
 
     <!-- 阿里云Maven仓库 -->
@@ -57,11 +58,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
